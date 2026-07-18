@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "742340943717",
+    "project_id": "mydrive-500808",
+    "storage_bucket": "mydrive-500808.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742340943717:android:9957d348b17b80584ecb8c",
+        "android_client_info": {
+          "package_name": "com.aniket.mydrive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMfzC9udFxRO2CnpJiS1edFEM6NKtDFfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742340943717:android:19a53129e60869af4ecb8c",
+        "android_client_info": {
+          "package_name": "com.example.mydrive_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMfzC9udFxRO2CnpJiS1edFEM6NKtDFfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742340943717:android:f835d6cdc955cdc94ecb8c",
+        "android_client_info": {
+          "package_name": "com.example.mydrive_driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMfzC9udFxRO2CnpJiS1edFEM6NKtDFfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
