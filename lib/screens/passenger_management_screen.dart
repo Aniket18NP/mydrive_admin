@@ -9,10 +9,8 @@ class PassengerManagementScreen extends StatefulWidget {
       _PassengerManagementScreenState();
 }
 
-class _PassengerManagementScreenState
-    extends State<PassengerManagementScreen> {
-  final TextEditingController _searchController =
-      TextEditingController();
+class _PassengerManagementScreenState extends State<PassengerManagementScreen> {
+  final TextEditingController _searchController = TextEditingController();
 
   String _searchText = "";
 
@@ -41,14 +39,12 @@ class _PassengerManagementScreenState
                 hintText: "Search passenger",
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               onChanged: (value) {
                 setState(() {
-                  _searchText =
-                      value.trim().toLowerCase();
+                  _searchText = value.trim().toLowerCase();
                 });
               },
             ),
@@ -59,43 +55,24 @@ class _PassengerManagementScreenState
                   .collection('users')
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child:
-                        CircularProgressIndicator(),
-                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
-                if (!snapshot.hasData ||
-                    snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No Passengers Found",
-                    ),
-                  );
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text("No Passengers Found"));
                 }
 
                 final docs = snapshot.data!.docs;
 
                 final passengers = docs.where((doc) {
-                  final data =
-                      doc.data() as Map<String, dynamic>;
+                  final data = doc.data() as Map<String, dynamic>;
 
-                  final name =
-                      (data["name"] ?? "")
-                          .toString()
-                          .toLowerCase();
+                  final name = (data["name"] ?? "").toString().toLowerCase();
 
-                  final email =
-                      (data["email"] ?? "")
-                          .toString()
-                          .toLowerCase();
+                  final email = (data["email"] ?? "").toString().toLowerCase();
 
-                  final phone =
-                      (data["phone"] ?? "")
-                          .toString()
-                          .toLowerCase();
+                  final phone = (data["phone"] ?? "").toString().toLowerCase();
 
                   if (_searchText.isEmpty) {
                     return true;
@@ -107,45 +84,26 @@ class _PassengerManagementScreenState
                 }).toList();
 
                 return ListView.builder(
-                  padding:
-                      const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   itemCount: passengers.length,
                   itemBuilder: (context, index) {
                     final data =
-                        passengers[index].data()
-                            as Map<String, dynamic>;
+                        passengers[index].data() as Map<String, dynamic>;
 
                     return Card(
-                      margin:
-                          const EdgeInsets.only(
-                              bottom: 14),
+                      margin: const EdgeInsets.only(bottom: 14),
                       elevation: 4,
-                      shape:
-                          RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(
-                                14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: ListTile(
-                        leading:
-                            const CircleAvatar(
-                          child: Icon(Icons.person),
-                        ),
-                        title: Text(
-                          data["name"] ??
-                              "Unknown",
-                        ),
+                        leading: const CircleAvatar(child: Icon(Icons.person)),
+                        title: Text(data["name"] ?? "Unknown"),
                         subtitle: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment
-                                  .start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                                data["email"] ??
-                                    ""),
-                            Text(
-                                data["phone"] ??
-                                    ""),
+                            Text(data["email"] ?? ""),
+                            Text(data["phone"] ?? ""),
                           ],
                         ),
                       ),

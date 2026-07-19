@@ -41,16 +41,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     if (error == null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const AdminDashboardScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const AdminDashboardScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(error),
-        ),
+        SnackBar(backgroundColor: Colors.red, content: Text(error)),
       );
     }
   }
@@ -69,10 +64,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xff1565C0),
-              Color(0xff42A5F5),
-            ],
+            colors: [Color(0xff1565C0), Color(0xff42A5F5)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -80,14 +72,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
-
                     const Icon(
                       Icons.admin_panel_settings,
                       color: Colors.white,
@@ -109,10 +98,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
                     const Text(
                       "Secure Administrator Portal",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
                     ),
 
                     const SizedBox(height: 40),
@@ -120,30 +106,21 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     Card(
                       elevation: 12,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Padding(
-                        padding:
-                            const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(24),
                         child: Column(
                           children: [
-
                             TextFormField(
-                              controller:
-                                  _emailController,
-                              keyboardType:
-                                  TextInputType.emailAddress,
-                              decoration:
-                                  const InputDecoration(
-                                labelText:
-                                    "Admin Email",
-                                prefixIcon:
-                                    Icon(Icons.email),
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                labelText: "Admin Email",
+                                prefixIcon: Icon(Icons.email),
                               ),
                               validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty) {
+                                if (value == null || value.isEmpty) {
                                   return "Enter your email";
                                 }
                                 return null;
@@ -152,7 +129,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
                             const SizedBox(height: 20),
 
-                                                        TextFormField(
+                            TextFormField(
                               controller: _passwordController,
                               obscureText: _obscurePassword,
                               decoration: InputDecoration(
@@ -166,15 +143,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      _obscurePassword =
-                                          !_obscurePassword;
+                                      _obscurePassword = !_obscurePassword;
                                     });
                                   },
                                 ),
                               ),
                               validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty) {
+                                if (value == null || value.isEmpty) {
                                   return "Enter your password";
                                 }
                                 return null;
@@ -187,27 +162,19 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               width: double.infinity,
                               height: 55,
                               child: ElevatedButton(
-                                onPressed:
-                                    _isLoading ? null : _login,
-                                style:
-                                    ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Colors.blue,
-                                  foregroundColor:
-                                      Colors.white,
-                                  shape:
-                                      RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(
-                                            12),
+                                onPressed: _isLoading ? null : _login,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 child: _isLoading
                                     ? const SizedBox(
                                         height: 22,
                                         width: 22,
-                                        child:
-                                            CircularProgressIndicator(
+                                        child: CircularProgressIndicator(
                                           color: Colors.white,
                                           strokeWidth: 2.5,
                                         ),
@@ -216,8 +183,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                         "LOGIN",
                                         style: TextStyle(
                                           fontSize: 18,
-                                          fontWeight:
-                                              FontWeight.bold,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                               ),
@@ -232,8 +198,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             const Text(
                               "MyDrive Admin Panel",
                               style: TextStyle(
-                                fontWeight:
-                                    FontWeight.bold,
+                                fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
                             ),
@@ -243,9 +208,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             const Text(
                               "Authorized administrators only",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
+                              style: TextStyle(color: Colors.grey),
                             ),
                           ],
                         ),
@@ -256,9 +219,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
                     const Text(
                       "© 2026 MyDrive Technologies",
-                      style: TextStyle(
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(color: Colors.white70),
                     ),
                   ],
                 ),

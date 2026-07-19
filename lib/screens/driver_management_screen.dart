@@ -6,14 +6,11 @@ class DriverManagementScreen extends StatefulWidget {
   const DriverManagementScreen({super.key});
 
   @override
-  State<DriverManagementScreen> createState() =>
-      _DriverManagementScreenState();
+  State<DriverManagementScreen> createState() => _DriverManagementScreenState();
 }
 
-class _DriverManagementScreenState
-    extends State<DriverManagementScreen> {
-  final TextEditingController _searchController =
-      TextEditingController();
+class _DriverManagementScreenState extends State<DriverManagementScreen> {
+  final TextEditingController _searchController = TextEditingController();
 
   String _searchText = "";
 
@@ -55,14 +52,12 @@ class _DriverManagementScreenState
                       )
                     : null,
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               onChanged: (value) {
                 setState(() {
-                  _searchText =
-                      value.trim().toLowerCase();
+                  _searchText = value.trim().toLowerCase();
                 });
               },
             ),
@@ -74,160 +69,100 @@ class _DriverManagementScreenState
                   .collection('drivers')
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child:
-                        CircularProgressIndicator(),
-                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      snapshot.error.toString(),
-                    ),
-                  );
+                  return Center(child: Text(snapshot.error.toString()));
                 }
 
                 final docs = snapshot.data?.docs ?? [];
 
-                final filteredDocs =
-                    docs.where((doc) {
-                  final data = doc.data()
-                      as Map<String, dynamic>;
+                final filteredDocs = docs.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
 
-                  final name = (data['name'] ?? '')
-                      .toString()
-                      .toLowerCase();
+                  final name = (data['name'] ?? '').toString().toLowerCase();
 
-                  final email =
-                      (data['email'] ?? '')
-                          .toString()
-                          .toLowerCase();
+                  final email = (data['email'] ?? '').toString().toLowerCase();
 
-                  final phone =
-                      (data['phone'] ?? '')
-                          .toString()
-                          .toLowerCase();
+                  final phone = (data['phone'] ?? '').toString().toLowerCase();
 
                   if (_searchText.isEmpty) {
                     return true;
                   }
 
-                  return name.contains(
-                          _searchText) ||
-                      email.contains(
-                          _searchText) ||
-                      phone.contains(
-                          _searchText);
+                  return name.contains(_searchText) ||
+                      email.contains(_searchText) ||
+                      phone.contains(_searchText);
                 }).toList();
 
                 if (filteredDocs.isEmpty) {
                   return const Center(
                     child: Text(
                       "No drivers found",
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: TextStyle(fontSize: 18),
                     ),
                   );
                 }
 
                 return ListView.builder(
-                  padding:
-                      const EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  itemCount:
-                      filteredDocs.length,
-                  itemBuilder:
-                      (context, index) {
+                  itemCount: filteredDocs.length,
+                  itemBuilder: (context, index) {
                     final data =
-                        filteredDocs[index].data()
-                            as Map<String,
-                                dynamic>;
+                        filteredDocs[index].data() as Map<String, dynamic>;
 
-                    final name =
-                        data['name'] ??
-                            "Unknown Driver";
+                    final name = data['name'] ?? "Unknown Driver";
 
-                    final email =
-                        data['email'] ?? "";
+                    final email = data['email'] ?? "";
 
-                    final phone =
-                        data['phone'] ?? "";
+                    final phone = data['phone'] ?? "";
 
-                    final earnings =
-                        (data['earnings'] ??
-                                0)
-                            .toDouble();
+                    final earnings = (data['earnings'] ?? 0).toDouble();
 
-                    final isOnline =
-                        data['isOnline'] ??
-                            false;
+                    final isOnline = data['isOnline'] ?? false;
 
                     final verification =
-                        data['documents']
-                                ?[
-                                'verificationStatus'] ??
-                            "Pending";
+                        data['documents']?['verificationStatus'] ?? "Pending";
 
                     return Card(
                       elevation: 4,
-                      margin:
-                          const EdgeInsets.only(
-                        bottom: 14,
-                      ),
-                      shape:
-                          RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(
-                                14),
+                      margin: const EdgeInsets.only(bottom: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: Padding(
-                        padding:
-                            const EdgeInsets.all(
-                                16),
+                        padding: const EdgeInsets.all(16),
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment
-                                  .start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
                                 const CircleAvatar(
                                   radius: 28,
-                                  child: Icon(
-                                    Icons.person,
-                                  ),
+                                  child: Icon(Icons.person),
                                 ),
 
-                                const SizedBox(
-                                    width: 14),
+                                const SizedBox(width: 14),
 
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         name,
-                                        style:
-                                            const TextStyle(
-                                          fontWeight:
-                                              FontWeight
-                                                  .bold,
-                                          fontSize:
-                                              18,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                          height:
-                                              4),
+                                      const SizedBox(height: 4),
 
                                       Text(email),
 
@@ -235,35 +170,27 @@ class _DriverManagementScreenState
                                     ],
                                   ),
                                 ),
-                                                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.end,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Container(
-                                      padding:
-                                          const EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                         vertical: 5,
                                       ),
                                       decoration: BoxDecoration(
                                         color: isOnline
-                                            ? Colors.green
-                                                .withOpacity(0.15)
-                                            : Colors.red
-                                                .withOpacity(0.15),
-                                        borderRadius:
-                                            BorderRadius.circular(20),
+                                            ? Colors.green.withOpacity(0.15)
+                                            : Colors.red.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
-                                        isOnline
-                                            ? "Online"
-                                            : "Offline",
+                                        isOnline ? "Online" : "Offline",
                                         style: TextStyle(
                                           color: isOnline
                                               ? Colors.green
                                               : Colors.red,
-                                          fontWeight:
-                                              FontWeight.bold,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
@@ -271,37 +198,27 @@ class _DriverManagementScreenState
                                     const SizedBox(height: 8),
 
                                     Container(
-                                      padding:
-                                          const EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                         vertical: 5,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: verification ==
-                                                "Approved"
-                                            ? Colors.green
-                                                .withOpacity(0.15)
-                                            : verification ==
-                                                    "Rejected"
-                                                ? Colors.red
-                                                    .withOpacity(0.15)
-                                                : Colors.orange
-                                                    .withOpacity(0.15),
-                                        borderRadius:
-                                            BorderRadius.circular(20),
+                                        color: verification == "Approved"
+                                            ? Colors.green.withOpacity(0.15)
+                                            : verification == "Rejected"
+                                            ? Colors.red.withOpacity(0.15)
+                                            : Colors.orange.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
                                         verification,
                                         style: TextStyle(
-                                          color: verification ==
-                                                  "Approved"
+                                          color: verification == "Approved"
                                               ? Colors.green
-                                              : verification ==
-                                                      "Rejected"
-                                                  ? Colors.red
-                                                  : Colors.orange,
-                                          fontWeight:
-                                              FontWeight.bold,
+                                              : verification == "Rejected"
+                                              ? Colors.red
+                                              : Colors.orange,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
@@ -333,26 +250,26 @@ class _DriverManagementScreenState
                             const SizedBox(height: 16),
 
                             Align(
-  alignment: Alignment.centerRight,
-  child: ElevatedButton.icon(
-    onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => DriverDetailsScreen(
-        driverId: filteredDocs[index].id,
-      ),
-    ),
-  );
-},
-    icon: const Icon(Icons.visibility),
-    label: const Text("View Details"),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
-    ),
-  ),
-),
+                              alignment: Alignment.centerRight,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => DriverDetailsScreen(
+                                        driverId: filteredDocs[index].id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.visibility),
+                                label: const Text("View Details"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

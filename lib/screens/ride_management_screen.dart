@@ -6,14 +6,11 @@ class RideManagementScreen extends StatefulWidget {
   const RideManagementScreen({super.key});
 
   @override
-  State<RideManagementScreen> createState() =>
-      _RideManagementScreenState();
+  State<RideManagementScreen> createState() => _RideManagementScreenState();
 }
 
-class _RideManagementScreenState
-    extends State<RideManagementScreen> {
-  final TextEditingController _searchController =
-      TextEditingController();
+class _RideManagementScreenState extends State<RideManagementScreen> {
+  final TextEditingController _searchController = TextEditingController();
 
   String _searchText = "";
 
@@ -74,33 +71,24 @@ class _RideManagementScreenState
                   .collection("rides")
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
-                if (!snapshot.hasData ||
-                    snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text("No Rides Found"),
-                  );
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text("No Rides Found"));
                 }
 
                 final rides = snapshot.data!.docs.where((doc) {
-                  final data =
-                      doc.data() as Map<String, dynamic>;
+                  final data = doc.data() as Map<String, dynamic>;
 
-                  final driver =
-                      (data["driverName"] ?? "")
-                          .toString()
-                          .toLowerCase();
+                  final driver = (data["driverName"] ?? "")
+                      .toString()
+                      .toLowerCase();
 
-                  final passenger =
-                      (data["passengerName"] ?? "")
-                          .toString()
-                          .toLowerCase();
+                  final passenger = (data["passengerName"] ?? "")
+                      .toString()
+                      .toLowerCase();
 
                   if (_searchText.isEmpty) {
                     return true;
@@ -116,13 +104,11 @@ class _RideManagementScreenState
                   itemBuilder: (context, index) {
                     final rideDoc = rides[index];
 
-                    final data =
-                        rideDoc.data() as Map<String, dynamic>;
+                    final data = rideDoc.data() as Map<String, dynamic>;
 
                     final rideId = rideDoc.id;
 
-                    final status =
-                        data["status"] ?? "Pending";
+                    final status = data["status"] ?? "Pending";
 
                     return Card(
                       elevation: 4,
@@ -130,8 +116,7 @@ class _RideManagementScreenState
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Driver : ${data["driverName"] ?? "-"}",
@@ -139,27 +124,22 @@ class _RideManagementScreenState
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text(
-                                "Passenger : ${data["passengerName"] ?? "-"}"),
-                            Text(
-                                "Pickup : ${data["pickup"] ?? "-"}"),
-                            Text(
-                                "Drop : ${data["drop"] ?? "-"}"),
-                            Text(
-                                "Fare : Rs ${data["fare"] ?? 0}"),
+                            Text("Passenger : ${data["passengerName"] ?? "-"}"),
+                            Text("Pickup : ${data["pickup"] ?? "-"}"),
+                            Text("Drop : ${data["drop"] ?? "-"}"),
+                            Text("Fare : Rs ${data["fare"] ?? 0}"),
 
                             const SizedBox(height: 10),
 
                             Chip(
-                              backgroundColor:
-                                  statusColor(status)
-                                      .withOpacity(0.2),
+                              backgroundColor: statusColor(
+                                status,
+                              ).withOpacity(0.2),
                               label: Text(
                                 status,
                                 style: TextStyle(
                                   color: statusColor(status),
-                                  fontWeight:
-                                      FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -169,17 +149,12 @@ class _RideManagementScreenState
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
-                                icon: const Icon(
-                                    Icons.location_on),
-                                label:
-                                    const Text("Track Ride"),
+                                icon: const Icon(Icons.location_on),
+                                label: const Text("Track Ride"),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Colors.blue,
-                                  foregroundColor:
-                                      Colors.white,
-                                  padding:
-                                      const EdgeInsets.symmetric(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 14,
                                   ),
                                 ),
@@ -188,9 +163,7 @@ class _RideManagementScreenState
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) =>
-                                          LiveTrackingScreen(
-                                        rideId: rideId,
-                                      ),
+                                          LiveTrackingScreen(rideId: rideId),
                                     ),
                                   );
                                 },

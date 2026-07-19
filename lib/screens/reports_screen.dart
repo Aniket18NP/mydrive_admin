@@ -19,7 +19,6 @@ class ReportsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             StreamBuilder<int>(
               stream: firestoreService.totalDrivers(),
               builder: (context, snapshot) {
@@ -93,17 +92,10 @@ class ReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget reportCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  Widget reportCard(String title, String value, IconData icon, Color color) {
     return Card(
       elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
@@ -111,24 +103,14 @@ class ReportsScreen extends StatelessWidget {
             CircleAvatar(
               radius: 28,
               backgroundColor: color.withOpacity(0.15),
-              child: Icon(
-                icon,
-                color: color,
-                size: 30,
-              ),
+              child: Icon(icon, color: color, size: 30),
             ),
             const SizedBox(width: 20),
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
+                  Text(title, style: const TextStyle(color: Colors.grey)),
                   const SizedBox(height: 5),
                   Text(
                     value,

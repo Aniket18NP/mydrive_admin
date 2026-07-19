@@ -19,10 +19,7 @@ class AuthService {
 
       final uid = credential.user!.uid;
 
-      final adminDoc = await _firestore
-          .collection('admins')
-          .doc(uid)
-          .get();
+      final adminDoc = await _firestore.collection('admins').doc(uid).get();
 
       if (!adminDoc.exists) {
         await _auth.signOut();

@@ -13,21 +13,16 @@ class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
 
   @override
-  State<AdminDashboardScreen> createState() =>
-      _AdminDashboardScreenState();
+  State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-class _AdminDashboardScreenState
-    extends State<AdminDashboardScreen> {
-  final FirestoreService _firestoreService =
-      FirestoreService();
+class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  final FirestoreService _firestoreService = FirestoreService();
 
   final AuthService _authService = AuthService();
 
   Future<void> _refresh() async {
-    await Future.delayed(
-      const Duration(milliseconds: 700),
-    );
+    await Future.delayed(const Duration(milliseconds: 700));
     setState(() {});
   }
 
@@ -36,10 +31,7 @@ class _AdminDashboardScreenState
 
     if (!mounted) return;
 
-    Navigator.popUntil(
-      context,
-      (route) => route.isFirst,
-    );
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   @override
@@ -59,19 +51,11 @@ class _AdminDashboardScreenState
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-
             const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              accountName: Text(
-                "Administrator",
-              ),
-              accountEmail: Text(
-                "MyDrive Admin Panel",
-              ),
-              currentAccountPicture:
-                  CircleAvatar(
+              decoration: BoxDecoration(color: Colors.blue),
+              accountName: Text("Administrator"),
+              accountEmail: Text("MyDrive Admin Panel"),
+              currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Icon(
                   Icons.admin_panel_settings,
@@ -82,125 +66,104 @@ class _AdminDashboardScreenState
             ),
 
             ListTile(
-              leading:
-                  const Icon(Icons.dashboard),
+              leading: const Icon(Icons.dashboard),
               title: const Text("Dashboard"),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
 
-           ListTile(
-  leading: const Icon(Icons.badge),
-  title: const Text("Drivers"),
-  onTap: () {
-    Navigator.pop(context);
+            ListTile(
+              leading: const Icon(Icons.badge),
+              title: const Text("Drivers"),
+              onTap: () {
+                Navigator.pop(context);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const DriverManagementScreen(),
-      ),
-    );
-  },
-),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const DriverManagementScreen(),
+                  ),
+                );
+              },
+            ),
 
             ListTile(
               leading: const Icon(Icons.people),
-              title:
-                  const Text("Passengers"),
+              title: const Text("Passengers"),
               onTap: () {
-  Navigator.pop(context);
+                Navigator.pop(context);
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const PassengerManagementScreen(),
-    ),
-  );
-},
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PassengerManagementScreen(),
+                  ),
+                );
+              },
             ),
 
             ListTile(
-              leading: const Icon(
-                  Icons.local_taxi),
+              leading: const Icon(Icons.local_taxi),
               title: const Text("Rides"),
               onTap: () {
-  Navigator.pop(context);
+                Navigator.pop(context);
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const RideManagementScreen(),
-    ),
-  );
-},
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RideManagementScreen(),
+                  ),
+                );
+              },
             ),
 
             ListTile(
-              leading:
-                  const Icon(Icons.bar_chart),
-              title:
-                  const Text("Reports"),
-             onTap: () {
-  Navigator.pop(context);
+              leading: const Icon(Icons.bar_chart),
+              title: const Text("Reports"),
+              onTap: () {
+                Navigator.pop(context);
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const ReportsScreen(),
-    ),
-  );
-},
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ReportsScreen()),
+                );
+              },
             ),
 
             ListTile(
-              leading:
-                  const Icon(Icons.settings),
-              title:
-                  const Text("Settings"),
-             onTap: () {
-  Navigator.pop(context);
+              leading: const Icon(Icons.settings),
+              title: const Text("Settings"),
+              onTap: () {
+                Navigator.pop(context);
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const SettingsScreen(),
-    ),
-  );
-},
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                );
+              },
             ),
 
             ListTile(
-  leading: const Icon(Icons.analytics),
-  title: const Text("Analytics"),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const AnalyticsDashboardScreen(),
-      ),
-    );
-  },
-),
+              leading: const Icon(Icons.analytics),
+              title: const Text("Analytics"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const AnalyticsDashboardScreen(),
+                  ),
+                );
+              },
+            ),
 
             const Divider(),
 
             ListTile(
-              leading: const Icon(
-                Icons.logout,
-                color: Colors.red,
-              ),
-              title: const Text(
-                "Logout",
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text("Logout", style: TextStyle(color: Colors.red)),
               onTap: _logout,
             ),
-            
-
           ],
         ),
       ),
@@ -208,57 +171,36 @@ class _AdminDashboardScreenState
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: SingleChildScrollView(
-          physics:
-              const AlwaysScrollableScrollPhysics(),
-          padding:
-              const EdgeInsets.all(16),
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const Text(
                 "Dashboard",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight:
-                      FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 5),
 
               const Text(
                 "Real-time overview of MyDrive",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
+                style: TextStyle(color: Colors.grey),
               ),
 
               const SizedBox(height: 25),
 
               Row(
                 children: [
-
                   Expanded(
-                    child:
-                        StreamBuilder<int>(
-                      stream:
-                          _firestoreService
-                              .totalDrivers(),
-                      builder: (
-                        context,
-                        snapshot,
-                      ) {
+                    child: StreamBuilder<int>(
+                      stream: _firestoreService.totalDrivers(),
+                      builder: (context, snapshot) {
                         return dashboardCard(
-                          title:
-                              "Drivers",
-                          value:
-                              "${snapshot.data ?? 0}",
-                          icon:
-                              Icons.badge,
-                          color:
-                              Colors.blue,
+                          title: "Drivers",
+                          value: "${snapshot.data ?? 0}",
+                          icon: Icons.badge,
+                          color: Colors.blue,
                         );
                       },
                     ),
@@ -267,24 +209,14 @@ class _AdminDashboardScreenState
                   const SizedBox(width: 15),
 
                   Expanded(
-                    child:
-                        StreamBuilder<int>(
-                      stream:
-                          _firestoreService
-                              .totalUsers(),
-                      builder: (
-                        context,
-                        snapshot,
-                      ) {
+                    child: StreamBuilder<int>(
+                      stream: _firestoreService.totalUsers(),
+                      builder: (context, snapshot) {
                         return dashboardCard(
-                          title:
-                              "Users",
-                          value:
-                              "${snapshot.data ?? 0}",
-                          icon:
-                              Icons.people,
-                          color:
-                              Colors.green,
+                          title: "Users",
+                          value: "${snapshot.data ?? 0}",
+                          icon: Icons.people,
+                          color: Colors.green,
                         );
                       },
                     ),
@@ -293,7 +225,7 @@ class _AdminDashboardScreenState
               ),
 
               const SizedBox(height: 15),
-                            Row(
+              Row(
                 children: [
                   Expanded(
                     child: StreamBuilder<int>(
@@ -397,9 +329,7 @@ class _AdminDashboardScreenState
                       Text(
                         "Monitor drivers, passengers, rides, earnings and verification requests in real time.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black54,
-                        ),
+                        style: TextStyle(color: Colors.black54),
                       ),
                     ],
                   ),
@@ -422,44 +352,29 @@ class _AdminDashboardScreenState
   }) {
     return Card(
       elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 22,
-          horizontal: 16,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
         child: Column(
           children: [
             CircleAvatar(
               radius: 28,
               backgroundColor: color.withOpacity(0.12),
-              child: Icon(
-                icon,
-                color: color,
-                size: 30,
-              ),
+              child: Icon(icon, color: color, size: 30),
             ),
 
             const SizedBox(height: 16),
 
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
 
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 15,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 15),
             ),
           ],
         ),

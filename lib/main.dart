@@ -7,9 +7,7 @@ import 'screens/admin_login_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyDriveAdmin());
 }
@@ -25,9 +23,7 @@ class MyDriveAdmin extends StatelessWidget {
 
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
 
       home: const AdminLoginScreen(),

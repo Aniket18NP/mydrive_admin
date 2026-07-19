@@ -5,23 +5,26 @@ class FirestoreService {
 
   /// Total Drivers
   Stream<int> totalDrivers() {
-    return _firestore.collection('drivers').snapshots().map(
-          (snapshot) => snapshot.docs.length,
-        );
+    return _firestore
+        .collection('drivers')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
   /// Total Passengers
   Stream<int> totalUsers() {
-    return _firestore.collection('users').snapshots().map(
-          (snapshot) => snapshot.docs.length,
-        );
+    return _firestore
+        .collection('users')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
   /// Total Rides
   Stream<int> totalRides() {
-    return _firestore.collection('rides').snapshots().map(
-          (snapshot) => snapshot.docs.length,
-        );
+    return _firestore
+        .collection('rides')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
   /// Pending Driver Verification
@@ -73,6 +76,6 @@ class FirestoreService {
       }
 
       return total;
-    });
+    });  
   }
 }
