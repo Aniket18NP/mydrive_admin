@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mydrive_admin/screens/driver_details_screen.dart';
 
 class AnalyticsDashboardScreen extends StatefulWidget {
   const AnalyticsDashboardScreen({super.key});
@@ -28,7 +29,16 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   int onlineDrivers = 0;
   int offlineDrivers = 0;
 
+  int activePassengers = 0;
+int ongoingTrips = 0;
+int completedToday = 0;
+int cancelledToday = 0;
+
   Map<String, int> dailyRides = {};
+
+List<Map<String, dynamic>> topDrivers = [];
+
+  String selectedFilter = "Month";
 
   @override
   void initState() {
@@ -37,6 +47,12 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   }
 
   Future<void> loadDashboard() async {
+    monthlyEarnings.clear();
+vehicleTypeCount.clear();
+dailyRides.clear();
+
+onlineDrivers = 0;
+offlineDrivers = 0;
     final drivers = await firestore.collection("drivers").get();
 
     for (var driver in drivers.docs) {
@@ -49,14 +65,95 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
       }
     }
 
+    topDrivers =
+    drivers.docs
+        .map((doc) => doc.data())
+        .toList();
+
+topDrivers.sort((a, b) {
+
+  final tripsA = a["trips"] ?? 0;
+  final tripsB = b["trips"] ?? 0;
+
+  return tripsB.compareTo(tripsA);
+
+});
+
+if (topDrivers.length > 5) {
+  topDrivers = topDrivers.sublist(0, 5);
+}
+
     final users = await firestore.collection("users").get();
 
-    final rides = await firestore.collection("rides").get();
+    activePassengers = users.docs.where((doc) {
+  final data = doc.data();
+  return data["isActive"] == true;
+}).length;
+
+    Query<Map<String, dynamic>> ridesQuery =
+    firestore.collection("rides");
+
+DateTime now = DateTime.now();
+
+if (selectedFilter == "Today") {
+
+  DateTime start = DateTime(now.year, now.month, now.day);
+
+  ridesQuery = ridesQuery.where(
+    "createdAt",
+    isGreaterThanOrEqualTo: Timestamp.fromDate(start),
+  );
+
+} else if (selectedFilter == "Week") {
+
+  DateTime start = now.subtract(const Duration(days: 7));
+
+  ridesQuery = ridesQuery.where(
+    "createdAt",
+    isGreaterThanOrEqualTo: Timestamp.fromDate(start),
+  );
+
+} else if (selectedFilter == "Month") {
+
+  DateTime start = DateTime(now.year, now.month, 1);
+
+  ridesQuery = ridesQuery.where(
+    "createdAt",
+    isGreaterThanOrEqualTo: Timestamp.fromDate(start),
+  );
+
+} else if (selectedFilter == "Year") {
+
+  DateTime start = DateTime(now.year, 1, 1);
+
+  ridesQuery = ridesQuery.where(
+    "createdAt",
+    isGreaterThanOrEqualTo: Timestamp.fromDate(start),
+  );
+
+}
+
+final rides = await ridesQuery.get();
 
     double earnings = 0;
 
     for (var ride in rides.docs) {
-      final data = ride.data();
+
+  final data = ride.data() as Map<String, dynamic>;
+
+  final status = data["status"] ?? "";
+
+if (status == "ongoing") {
+  ongoingTrips++;
+}
+
+if (status == "completed") {
+  completedToday++;
+}
+
+if (status == "cancelled") {
+  cancelledToday++;
+}
 
       earnings += (data["fare"] ?? 0).toDouble();
 
@@ -113,6 +210,40 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
               child: Column(
                 children: [
+                  const Text(
+  "Dashboard Filter",
+  style: TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
+const SizedBox(height: 15),
+
+SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child: Row(
+    children: [
+
+      filterChip("Today"),
+
+      const SizedBox(width: 10),
+
+      filterChip("Week"),
+
+      const SizedBox(width: 10),
+
+      filterChip("Month"),
+
+      const SizedBox(width: 10),
+
+      filterChip("Year"),
+
+    ],
+  ),
+),
+
+const SizedBox(height: 25),
                   Row(
                     children: [
                       Expanded(
@@ -318,6 +449,79 @@ SizedBox(
     ),
   ),
 ),
+
+const SizedBox(height: 25),
+
+const Text(
+  "📡 Live Activity",
+  style: TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
+const SizedBox(height: 15),
+
+GridView.count(
+  crossAxisCount: 2,
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  crossAxisSpacing: 12,
+  mainAxisSpacing: 12,
+ childAspectRatio: 1.3,
+  children: [
+    activityCard(
+      "🟢 Online Drivers",
+      onlineDrivers.toString(),
+      Colors.green,
+    ),
+    activityCard(
+      "👥 Active Passengers",
+      activePassengers.toString(),
+      Colors.blue,
+    ),
+    activityCard(
+      "🚖 Ongoing Trips",
+      ongoingTrips.toString(),
+      Colors.orange,
+    ),
+    activityCard(
+      "✅ Completed Today",
+      completedToday.toString(),
+      Colors.teal,
+    ),
+    activityCard(
+      "❌ Cancelled Today",
+      cancelledToday.toString(),
+      Colors.red,
+    ),
+  ],
+),
+
+const SizedBox(height: 30),
+
+const Text(
+  "🏆 Top Drivers",
+  style: TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
+const SizedBox(height: 15),
+
+ListView.builder(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  itemCount: topDrivers.length,
+  itemBuilder: (context, index) {
+
+    final driver = topDrivers[index];
+
+    return topDriverCard(driver, index);
+
+  },
+),
                   
                 ],
               ),
@@ -467,5 +671,150 @@ List<FlSpot> createDailyRideSpots() {
   });
 
   return spots;
+}
+
+Widget filterChip(String title) {
+
+  final selected = selectedFilter == title;
+
+  return ChoiceChip(
+
+    label: Text(title),
+
+    selected: selected,
+
+    onSelected: (value) {
+
+      setState(() {
+
+        selectedFilter = title;
+
+        loadDashboard();
+
+      });
+
+    },
+
+  );
+}
+Widget topDriverCard(
+    Map<String, dynamic> driver,
+    int index,
+) {
+
+  String medal = "";
+
+  if (index == 0) {
+    medal = "🥇";
+  } else if (index == 1) {
+    medal = "🥈";
+  } else if (index == 2) {
+    medal = "🥉";
+  } else {
+    medal = "🏅";
+  }
+
+  return Card(
+    margin: const EdgeInsets.only(bottom: 12),
+    elevation: 4,
+
+    child: ListTile(
+
+      leading: CircleAvatar(
+        radius: 25,
+        backgroundColor: Colors.blue,
+
+        child: Text(
+          medal,
+          style: const TextStyle(fontSize: 22),
+        ),
+      ),
+
+      title: Text(
+        driver["name"] ?? "Unknown Driver",
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            "⭐ Rating: ${(driver["rating"] ?? 0).toString()}",
+          ),
+
+          Text(
+            "🚖 Trips: ${(driver["trips"] ?? 0).toString()}",
+          ),
+
+          Text(
+            "💰 Earnings: Rs ${(driver["earnings"] ?? 0).toString()}",
+          ),
+
+        ],
+      ),
+
+      trailing: Icon(
+        driver["isOnline"] == true
+            ? Icons.circle
+            : Icons.circle_outlined,
+        color: driver["isOnline"] == true
+            ? Colors.green
+            : Colors.red,
+      ),
+
+     onTap: () {
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => DriverDetailsScreen(
+        driverId: driver["uid"],
+      ),
+    ),
+  );
+
+},
+
+    ),
+  );
+}
+Widget activityCard(
+  String title,
+  String value,
+  Color color,
+) {
+  return Card(
+    elevation: 4,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 }

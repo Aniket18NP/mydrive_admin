@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mydrive_admin/screens/live_tracking_screen.dart';
+import 'package:mydrive_admin/screens/ride_details_screen.dart';
 
 class RideManagementScreen extends StatefulWidget {
   const RideManagementScreen({super.key});
@@ -146,29 +147,55 @@ class _RideManagementScreenState extends State<RideManagementScreen> {
 
                             const SizedBox(height: 15),
 
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton.icon(
-                                icon: const Icon(Icons.location_on),
-                                label: const Text("Track Ride"),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          LiveTrackingScreen(rideId: rideId),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
+                            Row(
+  children: [
+    Expanded(
+      child: ElevatedButton.icon(
+        icon: const Icon(Icons.info),
+        label: const Text("View Details"),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => RideDetailsScreen(
+                rideId: rideId,
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+
+    const SizedBox(width: 10),
+
+    Expanded(
+      child: ElevatedButton.icon(
+        icon: const Icon(Icons.location_on),
+        label: const Text("Track Ride"),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => LiveTrackingScreen(
+                rideId: rideId,
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  ],
+),
                           ],
                         ),
                       ),
