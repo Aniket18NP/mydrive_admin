@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mydrive_admin/widgets/ride_map_card.dart';
 
-class RideDetailsScreen extends StatelessWidget {
+class RideDetailsScreen extends StatefulWidget {
   final String rideId;
 
   const RideDetailsScreen({
@@ -10,7 +12,15 @@ class RideDetailsScreen extends StatelessWidget {
   });
 
   @override
+  State<RideDetailsScreen> createState() => _RideDetailsScreenState();
+}
+
+class _RideDetailsScreenState extends State<RideDetailsScreen> {
+  GoogleMapController? _mapController;
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Ride Details"),
@@ -21,7 +31,7 @@ class RideDetailsScreen extends StatelessWidget {
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection("rides")
-            .doc(rideId)
+            .doc(widget.rideId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -82,6 +92,13 @@ infoCard(
     "Distance",
     "${(data["distance"] ?? 0).toString()} km",
   ),
+
+  RideMapCard(
+  pickupLat: (data["pickupLat"] ?? 0).toDouble(),
+  pickupLng: (data["pickupLng"] ?? 0).toDouble(),
+  destinationLat: (data["destinationLat"] ?? 0).toDouble(),
+  destinationLng: (data["destinationLng"] ?? 0).toDouble(),
+),
 
   timelineCard(
   createdAt: data["createdAt"],
@@ -323,6 +340,8 @@ Wrap(
     },
   );
 }
+
+
 Widget paymentCard({
   required double fare,
   required String paymentMethod,

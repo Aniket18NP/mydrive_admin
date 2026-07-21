@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mydrive_admin"
+    namespace = "com.aniket.mydriveadmin"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.mydrive_admin"
+       applicationId = "com.aniket.mydriveadmin"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

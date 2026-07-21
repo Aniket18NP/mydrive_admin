@@ -38,6 +38,7 @@ dependencies:
   # Polyline
   # ==========================
   flutter_polyline_points: ^2.1.0
+  http: ^1.2.2
 
   # ==========================
   # State Management
