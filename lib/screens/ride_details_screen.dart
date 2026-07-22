@@ -94,6 +94,7 @@ infoCard(
   ),
 
   RideMapCard(
+  driverId: data["driverId"] ?? "",
   pickupLat: (data["pickupLat"] ?? 0).toDouble(),
   pickupLng: (data["pickupLng"] ?? 0).toDouble(),
   destinationLat: (data["destinationLat"] ?? 0).toDouble(),
