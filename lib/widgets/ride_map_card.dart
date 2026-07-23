@@ -32,11 +32,19 @@ class _RideMapCardState extends State<RideMapCard> {
 
   GoogleMapController? _controller;
 
+  LatLng? _previousDriverPosition;
+
+Timer? _animationTimer;
+
+double _driverRotation = 0;
+
 bool _cameraMoved = false;
 
 Set<Polyline> _polylines = {};
 
 Marker? _driverMarker;
+
+BitmapDescriptor? _carIcon;
 
 StreamSubscription<DocumentSnapshot>? _driverSubscription;
 
@@ -83,6 +91,17 @@ Future<void> _loadRoute() async {
   });
 }
 
+Future<void> _loadCarIcon() async {
+  _carIcon = await AssetMapBitmap.create(
+    const ImageConfiguration(
+      size: Size(64, 64),
+    ),
+    'assets/images/car.png',
+  );
+}
+
+
+
 void _listenToDriverLocation() {
   _driverSubscription = FirebaseFirestore.instance
       .collection('drivers')
@@ -102,21 +121,97 @@ void _listenToDriverLocation() {
 
     if (!mounted) return;
 
-    setState(() {
-      _driverMarker = Marker(
-        markerId: const MarkerId('driver'),
-        position: LatLng(lat, lng),
-        infoWindow: const InfoWindow(title: 'Driver'),
-      );
-    });
+    final newPosition = LatLng(lat, lng);
+
+if (_driverMarker == null) {
+  setState(() {
+    _driverMarker = Marker(
+      markerId: const MarkerId('driver'),
+      position: newPosition,
+      icon: _carIcon ?? BitmapDescriptor.defaultMarker,
+      infoWindow: const InfoWindow(
+        title: '🚗 Driver',
+      ),
+      zIndex: 100,
+    );
+  });
+
+  _previousDriverPosition = newPosition;
+} else {
+  _animateDriverMarker(newPosition);
+}
   });
 }
+
+void _animateDriverMarker(LatLng newPosition) {
+  // First location received
+  if (_previousDriverPosition == null) {
+    _previousDriverPosition = newPosition;
+
+    setState(() {
+      _driverMarker = _driverMarker?.copyWith(
+        positionParam: newPosition,
+      );
+    });
+
+    return;
+  }
+
+  _animationTimer?.cancel();
+
+  const int steps = 30;
+  int currentStep = 0;
+
+  final double latStep =
+      (newPosition.latitude - _previousDriverPosition!.latitude) / steps;
+
+  final double lngStep =
+      (newPosition.longitude - _previousDriverPosition!.longitude) / steps;
+
+  _animationTimer = Timer.periodic(
+    const Duration(milliseconds: 50),
+    (timer) {
+      currentStep++;
+
+      final animatedPosition = LatLng(
+        _previousDriverPosition!.latitude + latStep * currentStep,
+        _previousDriverPosition!.longitude + lngStep * currentStep,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _driverMarker = _driverMarker?.copyWith(
+          positionParam: animatedPosition,
+        );
+      });
+
+      // Follow the driver
+      _controller?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: animatedPosition,
+            zoom: 17,
+          ),
+        ),
+      );
+
+      if (currentStep >= steps) {
+        timer.cancel();
+        _previousDriverPosition = newPosition;
+      }
+    },
+  );
+}
+
 
 @override
 void initState() {
   super.initState();
 
   debugPrint("Driver ID: ${widget.driverId}");
+
+  _loadCarIcon();
 
   _listenToDriverLocation();
 }
@@ -202,13 +297,19 @@ void initState() {
 },
                  markers: {
   Marker(
-    markerId: const MarkerId("pickup"),
+  markerId: const MarkerId("pickup"),
+  icon: BitmapDescriptor.defaultMarkerWithHue(
+    BitmapDescriptor.hueAzure,
+  ),
     position: pickup,
     infoWindow: const InfoWindow(title: "Pickup"),
   ),
 
   Marker(
-    markerId: const MarkerId("destination"),
+  markerId: const MarkerId("destination"),
+  icon: BitmapDescriptor.defaultMarkerWithHue(
+    BitmapDescriptor.hueRed,
+  ),
     position: destination,
     infoWindow: const InfoWindow(title: "Destination"),
   ),
@@ -228,9 +329,11 @@ void initState() {
       ),
     );
   }
-  @override
+  
+@override
 void dispose() {
   _driverSubscription?.cancel();
+  _animationTimer?.cancel();
   super.dispose();
 }
 }
